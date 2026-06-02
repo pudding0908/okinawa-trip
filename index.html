@@ -25,26 +25,40 @@
     // 請將下方的 URL 替換成您 Google Sheet 發佈的 CSV 連結
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcPzPct92RIaHrTGtEtSYXLg7_ZVI_Q_9N2WM7mbIfRY6ffqiBICn-bwYS7j7pU5cu3sJSb992_Wm5/pub?output=csv';
 
-    async function fetchData() {
-      const res = await fetch(csvUrl);
-      const csvText = await res.text();
-      const lines = csvText.split('\n');
-      const headers = lines[0].split(',');
-      
-      rawData = lines.slice(1).map(line => {
-        const values = line.split(',');
-        return {
-          day: values[0],
-          start: values[1],
-          end: values[2],
-          title: values[3],
-          desc: values[4]
-        };
-      });
-      render(1); // 預設顯示 Day 1
+   async function fetchData() {
+      try {
+        const res = await fetch(csvUrl);
+        const csvText = await res.text();
+        const lines = csvText.split('\n');
+        
+        rawData = lines.slice(1).map(line => {
+          // 使用正則表達式處理可能包含逗號的內容
+          const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+          return {
+            day: values[0]?.replace(/"/g, ''),
+            start: values[1]?.replace(/"/g, ''),
+            end: values[2]?.replace(/"/g, ''),
+            title: values[3]?.replace(/"/g, ''),
+            desc: values[4]?.replace(/"/g, '')
+          };
+        }).filter(item => item.day); // 過濾掉空行
+        
+        render(1);
+      } catch (e) {
+        console.error("資料讀取失敗，請檢查 CSV 連結是否公開", e);
+      }
     }
 
     function render(day) {
+      // 點擊後切換按鈕視覺效果
+      document.querySelectorAll('#day-tabs button').forEach((btn, index) => {
+        if (index + 1 == day) {
+          btn.className = "px-4 py-1 rounded-full border border-[#4A4A4A] text-xs font-bold bg-[#4A4A4A] text-white";
+        } else {
+          btn.className = "px-4 py-1 rounded-full border border-[#4A4A4A] text-xs font-bold";
+        }
+      });
+      
       const container = document.getElementById('timeline');
       container.innerHTML = '';
       
