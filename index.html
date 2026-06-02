@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>OKINAWA 2026</title>
+</head>
+<body class="bg-[#FDFBF7] text-[#4A4A4A] p-4 font-serif">
+  <h1 class="text-2xl font-bold text-center py-6">OKINAWA 2026</h1>
+  
+  <!-- 頁籤按鈕 (模擬 Day 切換) -->
+  <div id="day-tabs" class="flex justify-center gap-2 mb-8">
+    <button onclick="render(1)" class="px-4 py-1 rounded-full border border-[#4A4A4A] text-xs font-bold bg-[#4A4A4A] text-white">Day 1</button>
+    <button onclick="render(2)" class="px-4 py-1 rounded-full border border-[#4A4A4A] text-xs font-bold">Day 2</button>
+    <button onclick="render(3)" class="px-4 py-1 rounded-full border border-[#4A4A4A] text-xs font-bold">Day 3</button>
+  </div>
+
+  <!-- 時間軸容器 -->
+  <div id="timeline" class="max-w-sm mx-auto border-l-2 border-[#E5E0D5] ml-4 space-y-8"></div>
+
+  <script>
+    let rawData = [];
+
+    // 請將下方的 URL 替換成您 Google Sheet 發佈的 CSV 連結
+    const csvUrl = 'https://script.google.com/macros/s/AKfycbwz-O04-0uJS7LPovpIGZWh6n7WdeYnZcH1got4d0vjK6VSNErZqJA-ZesrsfsHk8cuZA/exec';
+
+    async function fetchData() {
+      const res = await fetch(csvUrl);
+      const csvText = await res.text();
+      const lines = csvText.split('\n');
+      const headers = lines[0].split(',');
+      
+      rawData = lines.slice(1).map(line => {
+        const values = line.split(',');
+        return {
+          day: values[0],
+          start: values[1],
+          end: values[2],
+          title: values[3],
+          desc: values[4]
+        };
+      });
+      render(1); // 預設顯示 Day 1
+    }
+
+    function render(day) {
+      const container = document.getElementById('timeline');
+      container.innerHTML = '';
+      
+      const filtered = rawData.filter(item => item.day == day);
+      filtered.forEach(item => {
+        container.innerHTML += `
+          <div class="relative pl-6">
+            <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border-2 border-[#A68966] rounded-full"></div>
+            <div class="text-[10px] font-bold text-[#A68966]">${item.start} - ${item.end}</div>
+            <div class="text-lg font-bold">${item.title}</div>
+            <div class="text-sm text-[#666] mt-1">${item.desc}</div>
+          </div>
+        `;
+      });
+    }
+
+    fetchData();
+  </script>
+</body>
+</html>
