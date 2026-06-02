@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沖繩手帳自由行 2026 (中文雲端版)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Noto Sans TC', 'sans-serif'], serif: ['Noto Serif TC', 'serif'] },
+                    colors: {
+                        muji: { bg: '#F7F5F0', paper: '#FFFFFF', primary: '#7F675B', secondary: '#A89F91', accent: '#C86B57', dark: '#3A3532', light: '#EFECE6' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F7F5F0; color: #3A3532; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .muji-dashed { border-style: dashed; border-color: #A89F91; }
+    </style>
+</head>
+<body class="font-sans min-h-screen pb-24 flex justify-center">
+
+    <div class="w-full max-w-md bg-muji-bg min-h-screen shadow-xl relative flex flex-col">
+        
+        <header class="bg-muji-paper p-6 pt-8 border-b-2 muji-dashed text-center relative">
+            <div class="text-xs tracking-widest text-muji-secondary font-medium mb-1">- ONLINE MUJI MEMO -</div>
+            <h1 class="font-serif text-3xl font-bold text-muji-primary tracking-wide">沖繩情緒手帳</h1>
+            <p class="text-xs text-muji-secondary mt-2"><i class="fa-regular fa-calendar-days mr-1"></i> 雲端行程即時同步</p>
+        </header>
+
+        <main class="flex-1 p-4 overflow-y-auto">
+            
+            <section id="page-plan" class="tab-content block">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-muji-light">
+                    <h2 class="font-serif text-xl font-bold text-muji-primary"><i class="fa-solid fa-compass mr-2"></i>行程時光軸</h2>
+                    <div class="flex gap-1 text-xs">
+                        <button onclick="switchDay('d1')" id="btn-d1" class="day-btn px-2 py-1 bg-muji-primary text-white rounded">D1</button>
+                        <button onclick="switchDay('d2')" id="btn-d2" class="day-btn px-2 py-1 bg-muji-paper text-muji-dark border border-muji-light rounded">D2</button>
+                        <button onclick="switchDay('d3')" id="btn-d3" class="day-btn px-2 py-1 bg-muji-paper text-muji-dark border border-muji-light rounded">D3</button>
+                        <button onclick="switchDay('d4')" id="btn-d4" class="day-btn px-2 py-1 bg-muji-paper text-muji-dark border border-muji-light rounded">D4</button>
+                    </div>
+                </div>
+
+                <div id="loading-status" class="text-center py-8 text-xs text-muji-secondary">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>正在同步雲端手帳資料...
+                </div>
+
+                <div id="day-d1" class="day-timeline space-y-4"></div>
+                <div id="day-d2" class="day-timeline space-y-4 hidden"></div>
+                <div id="day-d3" class="day-timeline space-y-4 hidden"></div>
+                <div id="day-d4" class="day-timeline space-y-4 hidden"></div>
+            </section>
+
+            <section id="page-guide" class="tab-content hidden">
+                <h2 class="font-serif text-xl font-bold text-muji-primary mb-4 border-b pb-2 border-muji-light"><i class="fa-solid fa-book-open mr-2"></i>手帳人文導覽</h2>
+                <div class="space-y-6">
+                    <article class="bg-muji-paper p-5 rounded-2xl shadow-sm border border-muji-light font-serif">
+                        <span class="text-xs bg-muji-primary text-white px-2 py-0.5 rounded-sm font-sans">深度文化</span>
+                        <h3 class="text-lg font-bold text-muji-dark mt-2 mb-2">美麗海水族館：黑潮之海</h3>
+                        <p class="text-sm text-muji-dark leading-relaxed mb-4 font-sans text-justify">這裡擁有世界第三大的巨大水槽「黑潮之海」。為了承受如此巨大的水壓，水槽的壓克力觀景窗厚度高達 60 公分！</p>
+                        <div class="w-full h-48 rounded-xl overflow-hidden border border-muji-light">
+                            <iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html?bbox=127.8752%2C26.6923%2C127.8812%2C26.6963&layer=mapnik&marker=26.6943%2C127.8782"></iframe>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="page-wallet" class="tab-content hidden">
+                <h2 class="font-serif text-xl font-bold text-muji-primary mb-4 border-b pb-2 border-muji-light"><i class="fa-solid fa-wallet mr-2"></i>隨身帳本 ＆ 匯率</h2>
+                <div class="bg-muji-paper p-4 rounded-2xl border border-muji-light mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs font-bold text-muji-primary">自訂日幣匯率 (1 JPY = TWD)</label>
+                        <input type="number" id="exchange-rate" value="0.215" step="0.001" class="w-20 px-2 py-1 text-right text-xs border border-muji-light rounded bg-muji-bg">
+                    </div>
+                    <input type="text" id="calc-input" placeholder="輸入算式如: 500+200*3" class="w-full px-3 py-2 border border-muji-light rounded-xl bg-muji-bg text-sm font-mono" onchange="calculateCost()">
+                    <div class="flex justify-between text-xs px-1 mt-2 text-muji-secondary">
+                        <span>計算結果: <strong id="calc-jpy" class="text-muji-dark">0</strong> JPY</span>
+                        <span>折合台幣: <strong id="calc-twd" class="text-muji-accent">NT$ 0</strong></span>
+                    </div>
+                </div>
+                <div class="bg-muji-paper p-4 rounded-2xl border border-muji-light mb-4">
+                    <div class="grid grid-cols-2 gap-2 mb-3"><input type="text" id="expense-title" placeholder="品項" class="px-3 py-2 border border-muji-light rounded-xl text-xs bg-muji-bg"><input type="number" id="expense-amount" placeholder="日幣金額" class="px-3 py-2 border border-muji-light rounded-xl text-xs bg-muji-bg"></div>
+                    <button onclick="addExpense()" class="w-full bg-muji-primary text-white text-xs py-2 rounded-xl">儲存記帳</button>
+                </div>
+                <div id="expense-list" class="space-y-2"></div>
+            </section>
+
+            <section id="page-lists" class="tab-content hidden">
+                <h2 class="font-serif text-xl font-bold text-muji-primary mb-3 border-b pb-2 border-muji-light"><i class="fa-solid fa-square-check mr-2"></i>行前準備 CheckList</h2>
+                <div id="checklist-container" class="bg-muji-paper p-4 rounded-2xl border border-muji-light space-y-2.5"></div>
+            </section>
+
+            <section id="page-info" class="tab-content hidden">
+                <h2 class="font-serif text-xl font-bold text-muji-primary mb-4 border-b pb-2 border-muji-light"><i class="fa-solid fa-circle-info mr-2"></i>實用旅遊資訊</h2>
+                <div class="bg-muji-paper p-4 rounded-2xl border border-muji-light text-center">
+                    <p class="text-xs text-muji-secondary mb-2">點擊下方直接開啟試算表App共同編輯</p>
+                    <a id="edit-sheet-btn" href="#" target="_blank" class="inline-block w-full bg-muji-accent text-white text-xs py-2 rounded-xl"><i class="fa-solid fa-pen-to-square mr-1"></i>前往線上 Google Sheet 編輯</a>
+                </div>
+            </section>
+        </main>
+
+        <nav class="absolute bottom-0 left-0 right-0 bg-muji-paper/95 backdrop-blur-md border-t border-muji-light flex justify-around items-center py-2 z-50 shadow-lg">
+            <button onclick="switchTab('plan')" id="nav-plan" class="nav-btn flex flex-col items-center text-muji-primary"><i class="fa-solid fa-map-location-dot text-lg"></i><span class="text-[10px] mt-0.5">PLAN</span></button>
+            <button onclick="switchTab('guide')" id="nav-guide" class="nav-btn flex flex-col items-center text-muji-secondary"><i class="fa-solid fa-passport text-lg"></i><span class="text-[10px] mt-0.5">GUIDE</span></button>
+            <button onclick="switchTab('wallet')" id="nav-wallet" class="nav-btn flex flex-col items-center text-muji-secondary"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[10px] mt-0.5">WALLET</span></button>
+            <button onclick="switchTab('lists')" id="nav-lists" class="nav-btn flex flex-col items-center text-muji-secondary"><i class="fa-solid fa-list-check text-lg"></i><span class="text-[10px] mt-0.5">LISTS</span></button>
+            <button onclick="switchTab('info')" id="nav-info" class="nav-btn flex flex-col items-center text-muji-secondary"><i class="fa-solid fa-circle-info text-lg"></i><span class="text-[10px] mt-0.5">INFO</span></button>
+        </nav>
+    </div>
+
+    <script>
+        // ==============================================================
+        // 1. 請在此處替換為您發佈到網路的「CSV 連結」
+        // ==============================================================
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwjXyRLhoBUB7_p2pnAniVMwe1QAyD2ITA4r7SSdwDxapJ0fHmOOttzVs5gJPXnSf00bbS-fb6qqoV/pub?output=csv';
+        // const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1H0pLIy9Cg1cMI673vZprheKm-DB6DisVU3U-24Q4Z7Y/gviz/tq?tqx=out:csv';
+
+        // ==============================================================
+        // 2. 請在此處填入供親友共同編輯的「一般網址」（INFO 頁面按鈕專用）
+        // ==============================================================
+        const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1H0pLIy9Cg1cMI673vZprheKm-DB6DisVU3U-24Q4Z7Y/edit?gid=0#gid=0';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('edit-sheet-btn').href = SHEET_EDIT_URL;
+            fetchTravelPlan();
+            initChecklist();
+            loadExpenses();
+        });
+
+        // 抓取 Google Sheet 資料
+        async function fetchTravelPlan() {
+            if(!SHEET_CSV_URL || SHEET_CSV_URL.includes('請在此處填入')) {
+                document.getElementById('loading-status').innerHTML = "⚠️ 請先在代碼中設定您的 Google Sheet CSV 連結。";
+                return;
+            }
+            try {
+                const response = await fetch(SHEET_CSV_URL);
+                const csvText = await response.text();
+                parseAndRenderCSV(csvText);
+                document.getElementById('loading-status').classList.add('hidden');
+            } catch (error) {
+                document.getElementById('loading-status').innerHTML = "❌ 讀取失敗，請確認表單是否已發佈到網路。";
+            }
+        }
+
+        // 解析全中文欄位 CSV
+        function parseAndRenderCSV(csvText) {
+            const lines = csvText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if(lines.length <= 1) return;
+
+            // 讀取第一列的中文標頭並去除引號
+            const headers = lines[0].split(',').map(h => h.replace(/["']/g, '').trim());
+            
+            // 清空舊行程
+            document.getElementById('day-d1').innerHTML = '';
+            document.getElementById('day-d2').innerHTML = '';
+            document.getElementById('day-d3').innerHTML = '';
+            document.getElementById('day-d4').innerHTML = '';
+
+            for (let i = 1; i < lines.length; i++) {
+                const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/["']/g, '').trim());
+                if(currentLine.length < headers.length) continue;
+
+                let row = {};
+                headers.forEach((header, index) => {
+                    row[header] = currentLine[index];
+                });
+
+                renderTimelineCard(row);
+            }
+        }
+
+        // 根據對應的中文欄位進行網頁渲染
+        function renderTimelineCard(row) {
+            const dayValue = row['Day'] ? row['Day'].toLowerCase() : '';
+            const containerId = `day-${dayValue}`;
+            const targetContainer = document.getElementById(containerId);
+            if (!targetContainer) return;
+
+            // 組合起訖時間
+            let timeString = row['時間起'] || '';
+            if (row['時間迄']) {
+                timeString += ` - ${row['時間迄']}`;
+            }
+
+            // 按鈕組合
+            let buttonHtml = '';
+            if (row['Google Map']) {
+                buttonHtml += `<a href="${row['Google Map']}" target="_blank" class="text-[11px] bg-muji-bg px-2 py-1 rounded text-muji-primary border border-muji-light mr-1"><i class="fa-solid fa-map-location-dot mr-1"></i>導航</a>`;
+            }
+            if (row['網頁']) {
+                buttonHtml += `<a href="${row['網頁']}" target="_blank" class="text-[11px] bg-muji-bg px-2 py-1 rounded text-muji-primary border border-muji-light mr-1"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>網站</a>`;
+            }
+
+            // 費用與備註附加資訊
+            let metaHtml = '';
+            if (row['區間費用']) {
+                metaHtml += `<span class="inline-block bg-muji-light text-muji-primary text-[10px] px-1.5 py-0.5 rounded mr-1">💰 ${row['區間費用']}</span>`;
+            }
+            if (row['備註']) {
+                metaHtml += `<span class="text-[11px] text-muji-accent font-medium">💬 ${row['備註']}</span>`;
+            }
+
+            let cardHtml = '';
+            // 分類為「重要」時，套用紅色警告卡片樣式
+            if (row['分類'] === '重要') {
+                cardHtml = `
+                    <div class="bg-muji-accent/10 border-l-4 border-muji-accent p-3 rounded shadow-sm">
+                        <div class="flex justify-between text-xs text-muji-accent font-bold mb-1">
+                            <span>${timeString}</span><span>🚨 重要</span>
+                        </div>
+                        <p class="font-medium text-muji-dark">${row['標題'] || '未命名行程'}</p>
+                        ${row['說明'] ? `<p class="text-xs text-muji-dark/80 mt-1">${row['說明']}</p>` : ''}
+                        ${metaHtml ? `<div class="mt-2">${metaHtml}</div>` : ''}
+                        ${buttonHtml ? `<div class="mt-2">${buttonHtml}</div>` : ''}
+                    </div>`;
+            } else {
+                cardHtml = `
+                    <div class="bg-muji-paper p-4 rounded-xl shadow-sm border border-muji-light">
+                        <div class="flex justify-between items-center text-xs text-muji-secondary mb-1">
+                            <span>${timeString}</span>
+                            ${row['分類'] ? `<span class="text-[10px] bg-muji-bg px-1.5 py-0.5 rounded text-muji-secondary">${row['分類']}</span>` : ''}
+                        </div>
+                        <h4 class="font-medium text-muji-primary">${row['標題'] || '未命名行程'}</h4>
+                        ${row['說明'] ? `<p class="text-xs text-muji-secondary mt-1 text-justify">${row['說明']}</p>` : ''}
+                        ${metaHtml ? `<div class="mt-2">${metaHtml}</div>` : ''}
+                        ${buttonHtml ? `<div class="mt-2">${buttonHtml}</div>` : ''}
+                    </div>`;
+            }
+
+            targetContainer.innerHTML += cardHtml;
+        }
+
+        // 基本導航控制
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${tabName}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-muji-primary'); btn.classList.add('text-muji-secondary');
+            });
+            document.getElementById(`nav-${tabName}`).classList.remove('text-muji-secondary');
+            document.getElementById(`nav-${tabName}`).classList.add('text-muji-primary');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchDay(dayId) {
+            document.querySelectorAll('.day-timeline').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`day-${dayId}`).classList.remove('hidden');
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.className = "day-btn px-2 py-1 bg-muji-paper text-muji-dark border border-muji-light rounded";
+            });
+            document.getElementById(`btn-${dayId}`).className = "day-btn px-2 py-1 bg-muji-primary text-white rounded";
+        }
+
+        // 行前準備小工具
+        function initChecklist() {
+            const defaultChecklist = [
+                { id: 1, text: "中華民國護照 (效期6個月以上)", checked: true },
+                { id: 2, text: "日本上網卡 (eSIM / 實體卡)", checked: false },
+                { id: 3, text: "日文駕照譯本 ＆ 台灣駕照正本", checked: false }
+            ];
+            if (!localStorage.getItem('ok_checklist')) localStorage.setItem('ok_checklist', JSON.stringify(defaultChecklist));
+            renderChecklist(JSON.parse(localStorage.getItem('ok_checklist')));
+        }
+
+        function renderChecklist(items) {
+            const container = document.getElementById('checklist-container'); container.innerHTML = '';
+            items.forEach(item => {
+                container.innerHTML += `
+                    <label class="flex items-start gap-3 text-xs text-muji-dark">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${item.id})" class="mt-0.5 accent-muji-primary h-4 w-4">
+                        <span class="${item.checked ? 'line-through text-muji-secondary' : 'font-medium'}">${item.text}</span>
+                    </label>`;
+            });
+        }
+
+        function toggleCheck(id) {
+            let stored = JSON.parse(localStorage.getItem('ok_checklist'));
+            stored = stored.map(i => i.id === id ? { ...i, checked: !i.checked } : i);
+            localStorage.setItem('ok_checklist', JSON.stringify(stored));
+            renderChecklist(stored);
+        }
+
+        // 記帳與計算法
+        function addExpense() {
+            const title = document.getElementById('expense-title').value.trim() || '未命名項目';
+            const jpy = parseFloat(document.getElementById('expense-amount').value) || 0;
+            if(jpy <= 0) return;
+            const expenses = JSON.parse(localStorage.getItem('ok_expenses')) || [];
+            expenses.push({ id: Date.now(), title, jpy, twd: Math.round(jpy * 0.215) });
+            localStorage.setItem('ok_expenses', JSON.stringify(expenses));
+            document.getElementById('expense-title').value = '';
+            document.getElementById('expense-amount').value = '';
+            loadExpenses();
+        }
+
+        function loadExpenses() {
+            const expenses = JSON.parse(localStorage.getItem('ok_expenses')) || [];
+            const container = document.getElementById('expense-list'); container.innerHTML = '';
+            expenses.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-muji-paper p-3 rounded-xl border border-muji-light flex justify-between items-center text-xs">
+                        <div><strong>${item.title}</strong> <span class="text-muji-secondary">(${item.jpy} JPY)</span></div>
+                        <div class="text-muji-accent font-bold">NT$ ${item.twd}</div>
+                    </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
